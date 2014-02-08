@@ -14,6 +14,69 @@ using Newtonsoft.Json;
 
 namespace HelloEventStore
 {
+    public class HelloEventStoreApplication
+    {
+        private CommandDispatcher _commandDispatcher;
+
+        public void Configure()
+        {
+            var connection = CreateConnection();
+            var userView = CreateUserView(connection);
+            var domainRepository = new EventStoreDomainRepository(connection);
+            _commandDispatcher = CreateCommandDispatcher(domainRepository, userView); 
+        }
+
+        private IUserView CreateUserView(IEventStoreConnection connection)
+        {
+            var userView = UserView.Instance;
+            Position position = Position.Start;
+            var allEvents = connection.ReadAllEventsForward(position, int.MaxValue, false);
+            Action<ResolvedEvent> updateView = re =>
+            {
+                if (re.OriginalEvent.EventType == typeof(UserCreated).Name)
+                {
+                    var jsonString = Encoding.UTF8.GetString(re.OriginalEvent.Data);
+                    var @event = JsonConvert.DeserializeObject<UserCreated>(jsonString);
+
+                    userView.InsertUser(@event.Id, @event.UserName);
+                }
+            };
+            foreach (var resolvedEvent in allEvents.Events)
+            {
+                updateView(resolvedEvent);
+            }
+            connection.SubscribeToAll(false, (ess, re) => updateView(re));
+            return userView;
+        }
+
+
+        private CommandDispatcher CreateCommandDispatcher(EventStoreDomainRepository domainRepository, IUserView userView)
+        {
+            var commandDispatcher = new CommandDispatcher(domainRepository);
+            var userService = new UserService(userView, domainRepository);
+            commandDispatcher.RegisterHandler<CreateUser>(userService.Handle);
+            commandDispatcher.RegisterHandler<ChangeName>(userService.Handle);
+            return commandDispatcher;
+        }
+
+        private static IEventStoreConnection CreateConnection()
+        {
+            ConnectionSettings settings =
+                ConnectionSettings.Create()
+                    .UseConsoleLogger()
+                    .SetDefaultUserCredentials(new UserCredentials("admin", "changeit"));
+            var endPoint = new IPEndPoint(IPAddress.Loopback, 1113);
+            var connection = EventStoreConnection.Create(settings, endPoint, null);
+            connection.Connect();
+            return connection;
+        }
+
+        public void ExecuteCommand(object command)
+        {
+            _commandDispatcher.ExecuteCommand(command as ICommand);
+        }
+    }
+
     class Program
     {
         public static Dictionary<int, Guid> _accountDictionary = new Dictionary<int, Guid>(); 
@@ -22,7 +85,9 @@ namespace HelloEventStore
         {
             var commandReader = new CommandReader();
 
-            var commandDispatcher = CreateCommandDispatcher();
+            var application = new HelloEventStoreApplication();
+            application.Configure();
+
             commandReader.PrintOptions();
 
             var done = false;
@@ -42,7 +107,7 @@ namespace HelloEventStore
                     }
                     else
                     {
-                        commandDispatcher.ExecuteCommand(command as ICommand);
+                        application.ExecuteCommand(command);
                     }
                 }
                 catch (Exception ex)
@@ -53,42 +118,6 @@ namespace HelloEventStore
                     Console.ForegroundColor = currentColor;
                 }
             }
-        }
-
-        private static CommandDispatcher CreateCommandDispatcher()
-        {
-            var connection = CreateConnection();
-
-            var userView = UserView.Instance;
-            connection.SubscribeToAll(false, (ess, re) =>
-            {
-                if (re.OriginalEvent.EventType == typeof (UserCreated).Name)
-                {
-                    var jsonString = Encoding.UTF8.GetString(re.OriginalEvent.Data);
-                    var @event = JsonConvert.DeserializeObject<UserCreated>(jsonString);
-
-                    userView.InsertUser(@event.Id, @event.UserName);
-                }
-            });
-            
-            var domainRepository = new EventStoreDomainRepository(connection);
-            var commandDispatcher = new CommandDispatcher(domainRepository);
-            var userService = new UserService(userView, domainRepository);
-            commandDispatcher.RegisterHandler<CreateUser>(userService.Handle);
-            commandDispatcher.RegisterHandler<ChangeName>(userService.Handle);
-            return commandDispatcher;
-        }
-
-        private static IEventStoreConnection CreateConnection()
-        {
-            ConnectionSettings settings =
-                ConnectionSettings.Create()
-                    .UseConsoleLogger()
-                    .SetDefaultUserCredentials(new UserCredentials("admin", "changeit"));
-            var endPoint = new IPEndPoint(IPAddress.Loopback, 1113);
-            var connection = EventStoreConnection.Create(settings, endPoint, null);
-            connection.Connect();
-            return connection;
         }
     }
 }

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EventStore.ClientAPI;
-using HelloEventStore.Infrastructure;
 using Newtonsoft.Json;
 
 namespace HelloEventStore
 {
-    public class EventStoreDomainRepository : IDomainRepository
+    public class EventStoreDomainRepository : DomainRepositoryBase
     {
         private IEventStoreConnection _connection;
 
@@ -22,7 +21,7 @@ namespace HelloEventStore
             return string.Format("{0} - {1}", type.FullName, id);
         }
 
-        public void Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate
+        public override void Save<TAggregate>(TAggregate aggregate)
         {
             var events = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, events);
@@ -31,19 +30,17 @@ namespace HelloEventStore
             _connection.AppendToStream(streamName, expectedVersion, eventData);
         }
 
-        public TResult GetById<TResult>(Guid id) where TResult : IAggregate, new()
+        public override TResult GetById<TResult>(Guid id)
         {
             var streamName = AggregateToStreamName(typeof(TResult), id);
             var events = _connection.ReadStreamEventsForward(streamName, 0, int.MaxValue, false);
-            var aggregate = new TResult();
-            foreach (var resolvedEvent in events.Events)
+            var deserializedEvents = events.Events.Select(e =>
             {
-                var metadata = DeserializeObject<Dictionary<string, string>>(resolvedEvent.OriginalEvent.Metadata);
-                var eventData = DeserializeObject(resolvedEvent.OriginalEvent.Data, metadata[EventClrTypeHeader]);
-                aggregate.ApplyEvent(eventData);
-            }
-
-            return aggregate;
+                var metadata = DeserializeObject<Dictionary<string, string>>(e.OriginalEvent.Metadata);
+                var eventData = DeserializeObject(e.OriginalEvent.Data, metadata[EventClrTypeHeader]);
+                return eventData;
+            });
+            return BuildAggregate<TResult>(deserializedEvents);
         }
 
         private T DeserializeObject<T>(byte[] data)
@@ -55,13 +52,6 @@ namespace HelloEventStore
         {
             var jsonString = Encoding.UTF8.GetString(data);
             return JsonConvert.DeserializeObject(jsonString, Type.GetType(typeName));
-        }
-
-        private int CalculateExpectedVersion(IAggregate aggregate, List<object> events)
-        {
-            var expectedVersion = aggregate.Version - events.Count - 1;
-            expectedVersion = expectedVersion == -1 ? ExpectedVersion.NoStream : expectedVersion;
-            return expectedVersion;
         }
 
         public EventData CreateEventData(object @event)

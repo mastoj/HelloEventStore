@@ -50,11 +50,13 @@
   <ItemGroup>
     <Compile Include="AggregateBase.cs" />
     <Compile Include="CommandDispatcher.cs" />
+    <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="EventStoreDomainRepository.cs" />
     <Compile Include="IAggregate.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IDomainRepository.cs" />
     <Compile Include="IHandle.cs" />
+    <Compile Include="InMemoryDomainRespository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
