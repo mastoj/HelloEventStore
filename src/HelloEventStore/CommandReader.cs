@@ -16,6 +16,7 @@ namespace HelloEventStore
             {"cn", DescAction("cn [user name] [new name] - change user name", CreateChangeUserNameCommand)},
             {"cp", DescAction("cp [product name] [quantity] - create product", CreateAddProductCommand)},
             {"ui", DescAction("ui [product name] [quantity] - update product inventory", CreateUpdateProductCommand)},
+            {"po", DescAction("po [user name] [product name] [quantity] - place order", CreatePlaceOrderCommand)},
             {"lu", DescAction("lu - list users", _ => new ListUsers())},
             {"lp", DescAction("lp - list products", _ => new ListProducts())},
             {"q", DescAction("q - quit", _ => new Quit())},
@@ -47,7 +48,12 @@ namespace HelloEventStore
 
         private static object CreatePlaceOrderCommand(string[] arg)
         {
-            throw new NotImplementedException();
+            var userName = arg[0];
+            var productName = arg[1];
+            var quantity = int.Parse(arg[2]);
+            var userId = UserView.Instance.GetId(userName);
+            var productId = ProductView.Instance.GetId(productName);
+            return new PlaceOrder(userId, productId, quantity);
         }
 
         private static Tuple<string, Func<string[], object>> DescAction(string description,

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using EventStore.ClientAPI;
-using HelloEventStore.Infrastructure;
 
-namespace HelloEventStore
+namespace HelloEventStore.Infrastructure
 {
     public abstract class DomainRepositoryBase : IDomainRepository
     {
-        public abstract void Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
+        public abstract IEnumerable<object> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
         public abstract TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
 
         protected int CalculateExpectedVersion(IAggregate aggregate, List<object> events)

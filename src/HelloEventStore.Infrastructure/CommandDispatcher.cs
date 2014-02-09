@@ -8,11 +8,13 @@ namespace HelloEventStore.Infrastructure
     {
         private Dictionary<Type, Func<object, IAggregate>> _routes;
         private IDomainRepository _domainRepository;
+        private readonly IEnumerable<Action<object>> _postExecutionPipe;
         private readonly IEnumerable<Action<ICommand>> _preExecutionPipe;
 
-        public CommandDispatcher(IDomainRepository domainRepository, IEnumerable<Action<ICommand>> preExecutionPipe)
+        public CommandDispatcher(IDomainRepository domainRepository, IEnumerable<Action<ICommand>> preExecutionPipe, IEnumerable<Action<object>> postExecutionPipe)
         {
             _domainRepository = domainRepository;
+            _postExecutionPipe = postExecutionPipe;
             _preExecutionPipe = preExecutionPipe ?? Enumerable.Empty<Action<ICommand>>();
             _routes = new Dictionary<Type, Func<object, IAggregate>>();
         }
@@ -32,7 +34,19 @@ namespace HelloEventStore.Infrastructure
                 throw new ApplicationException("Missing handler for " + commandType.Name);
             }
             var aggregate = _routes[commandType](command);
-            _domainRepository.Save(aggregate);
+            var savedEvents = _domainRepository.Save(aggregate);
+            RunPostExecutionPipe(savedEvents);
+        }
+
+        private void RunPostExecutionPipe(IEnumerable<object> savedEvents)
+        {
+            foreach (var savedEvent in savedEvents)
+            {
+                foreach (var action in _postExecutionPipe)
+                {
+                    action(savedEvent);
+                }
+            }
         }
 
         private void RunPreExecutionPipe(ICommand command)

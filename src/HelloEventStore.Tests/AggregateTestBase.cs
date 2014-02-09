@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HelloEventStore.Domain;
 using HelloEventStore.Domain.Services;
 using HelloEventStore.Infrastructure;
 using NUnit.Framework;
 
 namespace HelloEventStore.Tests
 {
-    public abstract class TestBase
+    public abstract class AggregateTestBase
     {
         private InMemoryDomainRespository _domainRepository;
         private HelloEventStoreApplication application_application;

@@ -49,8 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InMemoryDomainRespository.cs" />
+    <Compile Include="OrderTests.cs" />
     <Compile Include="ProductTests.cs" />
-    <Compile Include="TestBase.cs" />
+    <Compile Include="AggregateTestBase.cs" />
     <Compile Include="UserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

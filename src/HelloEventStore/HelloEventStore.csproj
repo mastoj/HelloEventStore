@@ -55,7 +55,6 @@
     <Compile Include="Commands\ListProducts.cs" />
     <Compile Include="Commands\ListUsers.cs" />
     <Compile Include="Commands\PrintOptions.cs" />
-    <Compile Include="HelloEventStoreApplication.cs" />
     <Compile Include="ProductView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

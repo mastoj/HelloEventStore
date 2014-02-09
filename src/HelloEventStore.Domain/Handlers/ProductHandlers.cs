@@ -2,7 +2,7 @@ using HelloEventStore.Domain.Aggregates;
 using HelloEventStore.Domain.Commands;
 using HelloEventStore.Infrastructure;
 
-namespace HelloEventStore.Domain.Services
+namespace HelloEventStore.Domain.Handlers
 {
     public class ProductHandlers : IHandle<AddProductToInventory>, IHandle<UpdateProductInventory>
     {

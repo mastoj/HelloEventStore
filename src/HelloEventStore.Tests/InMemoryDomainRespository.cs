@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventStore.ClientAPI.Exceptions;
+using HelloEventStore.Infrastructure;
 using HelloEventStore.Infrastructure.Exceptions;
 
 namespace HelloEventStore.Tests
@@ -9,9 +10,9 @@ namespace HelloEventStore.Tests
     public class InMemoryDomainRespository : DomainRepositoryBase
     {
         public Dictionary<Guid, List<object>> _eventStore = new Dictionary<Guid, List<object>>();
-        private IEnumerable<object> _latestEvents = new List<object>();
+        private List<object> _latestEvents = new List<object>();
 
-        public override void Save<TAggregate>(TAggregate aggregate)
+        public override IEnumerable<object> Save<TAggregate>(TAggregate aggregate)
         {
             var eventsToSave = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, eventsToSave);
@@ -30,8 +31,9 @@ namespace HelloEventStore.Tests
                 }
                 existingEvents.AddRange(eventsToSave);
             }
-            _latestEvents = eventsToSave;
+            _latestEvents.AddRange(eventsToSave);
             aggregate.ClearUncommitedEvents();
+            return eventsToSave;
         }
 
         public IEnumerable<object> GetLatestEvents()

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace HelloEventStore.Tests
 {
     [TestFixture]
-    public class ProductTests : TestBase
+    public class ProductTests : AggregateTestBase
     {
         [Test]
         public void AddProuctToInventory_ProductAddedToInventory()

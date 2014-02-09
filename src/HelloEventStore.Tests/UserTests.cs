@@ -3,25 +3,14 @@ using HelloEventStore.Domain.Commands;
 using HelloEventStore.Domain.Events;
 using HelloEventStore.Domain.Exceptions;
 using HelloEventStore.Domain.Services;
+using HelloEventStore.Infrastructure;
 using HelloEventStore.Infrastructure.Exceptions;
 using NUnit.Framework;
 
 namespace HelloEventStore.Tests
 {
     [TestFixture]
-	public class OrderTests : TestBase
-	{
-		public void PlaceOrder_OrderPlaced_IfUserExist()
-		{
-			var userId = Guid.NewGuid();
-			var productId = Guid.NewGuid();
-			var quantity = 5;
-//            var placeOrder = new PlaceOrder()
-		}
-	}
-
-	[TestFixture]
-	public class UserTests : TestBase
+	public class UserTests : AggregateTestBase
 	{
 		[Test]
 		public void CreateUser_UserCreated_IfNotExist()

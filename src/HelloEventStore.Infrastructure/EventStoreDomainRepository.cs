@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using EventStore.ClientAPI;
 using HelloEventStore.Infrastructure.Exceptions;
 using Newtonsoft.Json;
 
-namespace HelloEventStore
+namespace HelloEventStore.Infrastructure
 {
     public class EventStoreDomainRepository : DomainRepositoryBase
     {
@@ -20,16 +19,17 @@ namespace HelloEventStore
 
         private string AggregateToStreamName(Type type, Guid id)
         {
-            return string.Format("{0} - {1}", type.FullName, id);
+            return string.Format("{0}-{1}", type.Name, id);
         }
 
-        public override void Save<TAggregate>(TAggregate aggregate)
+        public override IEnumerable<object> Save<TAggregate>(TAggregate aggregate)
         {
             var events = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, events);
             var eventData = events.Select(CreateEventData);
             var streamName = AggregateToStreamName(aggregate.GetType(), aggregate.Id);
             _connection.AppendToStream(streamName, expectedVersion, eventData);
+            return events;
         }
 
         public override TResult GetById<TResult>(Guid id)

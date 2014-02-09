@@ -1,9 +1,10 @@
 ﻿using HelloEventStore.Domain.Aggregates;
 using HelloEventStore.Domain.Commands;
 using HelloEventStore.Domain.Exceptions;
+using HelloEventStore.Domain.Services;
 using HelloEventStore.Infrastructure;
 
-namespace HelloEventStore.Domain.Services
+namespace HelloEventStore.Domain.Handlers
 {
     public class UserHandlers : IHandle<CreateUser>, IHandle<ChangeName>
     {
