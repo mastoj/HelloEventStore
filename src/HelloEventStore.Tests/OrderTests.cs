@@ -71,7 +71,7 @@ namespace HelloEventStore.Tests
             Given(productId, new ProductAddedToInventory(productId, "ball", initialQuantity));
             Given(orderId, new OrderCreated(orderId, Guid.Empty, productId, orderQuantity));
             When(new CancelOrder(orderId));
-            Then(new OrderCancelled(orderId), new ProductQuantityIncreased(productId, orderQuantity, 10));
+            Then(new OrderCancelled(orderId, productId, orderQuantity), new ProductQuantityIncreased(productId, orderQuantity, 10));
         }
 
         [Test]
