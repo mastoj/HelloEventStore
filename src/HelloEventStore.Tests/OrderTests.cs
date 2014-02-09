@@ -47,5 +47,41 @@ namespace HelloEventStore.Tests
                 new OutOfProduct(productId, "ball"),
                 new ProductQuantityDecreased(productId, -quantity, 4));
         }
+
+        public void DeliverOrder_MarksProductAsDelivered()
+        {
+            Guid productId = Guid.NewGuid();
+            Guid orderId = Guid.NewGuid();
+            int orderQuantity = 5;
+
+            Given(orderId, new OrderCreated(orderId, Guid.Empty, productId, orderQuantity));
+            When(new DeliverOrder(orderId));
+            Then(new OrderDelivered(orderId));
+        }
+
+        [Test]
+        public void CancelOrder_OrderCancelledAndInventoryUpdated()
+        {
+            Guid productId = Guid.NewGuid();
+            Guid orderId = Guid.NewGuid();
+            int initialQuantity = 10;
+            int orderQuantity = 5;
+
+            Given(productId, new ProductAddedToInventory(productId, "ball", initialQuantity));
+            Given(orderId, new OrderCreated(orderId, Guid.Empty, productId, orderQuantity));
+            When(new CancelOrder(orderId));
+            Then(new OrderCancelled(orderId), new ProductQuantityIncreased(productId, orderQuantity, 10));
+        }
+
+        [Test]
+        public void CancelOrder_ThrowsExceptionIfAlreadyDelivered()
+        {
+            Guid productId = Guid.NewGuid();
+            Guid orderId = Guid.NewGuid();
+            int orderQuantity = 5;
+
+            Given(orderId, new OrderCreated(orderId, Guid.Empty, productId, orderQuantity), new OrderDelivered(orderId));
+            WhenThrows<OrderStateException>(new CancelOrder(orderId));
+        }
     }
 }
