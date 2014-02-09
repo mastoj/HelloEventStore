@@ -16,4 +16,24 @@ namespace HelloEventStore.Domain.Commands
             Quantity = quantity;
         }
     }
+
+    public class DeliverOrder : ICommand
+    {
+        public Guid Id { get; private set; }
+
+        public DeliverOrder(Guid id)
+        {
+            Id = id;
+        }
+    }
+
+    public class CancelOrder : ICommand
+    {
+        public Guid Id { get; private set; }
+
+        public CancelOrder(Guid id)
+        {
+            Id = id;
+        }
+    }
 }

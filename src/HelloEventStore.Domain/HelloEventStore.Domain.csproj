@@ -47,6 +47,7 @@
     <Compile Include="Events\ProductEvents.cs" />
     <Compile Include="Events\UserEvents.cs" />
     <Compile Include="Aggregates\Product.cs" />
+    <Compile Include="Exceptions\OrderStateException.cs" />
     <Compile Include="Handlers\OrderHandlers.cs" />
     <Compile Include="Handlers\ProductHandlers.cs" />
     <Compile Include="HelloEventStoreApplication.cs" />

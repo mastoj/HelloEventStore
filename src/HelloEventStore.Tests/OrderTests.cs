@@ -1,7 +1,9 @@
 ﻿using System;
 using HelloEventStore.Domain.Commands;
 using HelloEventStore.Domain.Events;
+using HelloEventStore.Domain.Exceptions;
 using HelloEventStore.Domain.Services;
+using HelloEventStore.Infrastructure;
 using NUnit.Framework;
 
 namespace HelloEventStore.Tests
@@ -21,9 +23,9 @@ namespace HelloEventStore.Tests
 
             Given(userId, new UserCreated(userId, "john", "doe"));
             Given(productId, new ProductAddedToInventory(productId, "ball", 10));
-            
+
             When(placeOrder);
-            
+
             Then(new OrderCreated(orderId, userId, productId, quantity),
                 new ProductQuantityDecreased(productId, -quantity, 10));
         }
@@ -37,12 +39,12 @@ namespace HelloEventStore.Tests
             IdGenerator.GuidGenerator = () => orderId;
             var quantity = 5;
             var placeOrder = new PlaceOrder(userId, productId, quantity);
-            
+
             Given(userId, new UserCreated(userId, "john", "doe"));
             Given(productId, new ProductAddedToInventory(productId, "ball", 4));
 
             When(placeOrder);
-            
+
             Then(new OrderCreated(orderId, userId, productId, quantity),
                 new OutOfProduct(productId, "ball"),
                 new ProductQuantityDecreased(productId, -quantity, 4));

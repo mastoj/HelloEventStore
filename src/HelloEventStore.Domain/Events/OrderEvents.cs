@@ -42,4 +42,60 @@ namespace HelloEventStore.Domain.Events
             }
         }
     }
+
+    public class OrderDelivered
+    {
+        public Guid Id { get; private set; }
+
+        public OrderDelivered(Guid id)
+        {
+            Id = id;
+        }
+
+        protected bool Equals(OrderDelivered other)
+        {
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((OrderDelivered) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+    }
+
+    public class OrderCancelled
+    {
+        public Guid Id { get; private set; }
+
+        protected bool Equals(OrderCancelled other)
+        {
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((OrderCancelled) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public OrderCancelled(Guid id)
+        {
+            Id = id;
+        }
+    }
 }
