@@ -48,6 +48,7 @@ namespace HelloEventStore.Tests
                 new ProductQuantityDecreased(productId, -quantity, 4));
         }
 
+        [Test]
         public void DeliverOrder_MarksProductAsDelivered()
         {
             Guid productId = Guid.NewGuid();
