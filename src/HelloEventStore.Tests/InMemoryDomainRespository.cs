@@ -4,7 +4,7 @@ using System.Linq;
 using EventStore.ClientAPI.Exceptions;
 using HelloEventStore.Infrastructure.Exceptions;
 
-namespace HelloEventStore
+namespace HelloEventStore.Tests
 {
     public class InMemoryDomainRespository : DomainRepositoryBase
     {
@@ -46,8 +46,7 @@ namespace HelloEventStore
                 var events = _eventStore[id];
                 return BuildAggregate<TResult>(events);                
             }
-            throw new AggregateNotFoundException("Could not found aggregate of type " + typeof (TResult) + " and id " +
-                                                 id);
+            throw new AggregateNotFoundException("Could not found aggregate of type " + typeof (TResult) + " and id " + id);
         }
 
         public void AddEvents(Dictionary<Guid, List<object>> eventsForAggregates)

@@ -1,15 +1,16 @@
-﻿using HelloEventStore.Domain.Commands;
+﻿using HelloEventStore.Domain.Aggregates;
+using HelloEventStore.Domain.Commands;
 using HelloEventStore.Domain.Exceptions;
 using HelloEventStore.Infrastructure;
 
 namespace HelloEventStore.Domain.Services
 {
-    public class UserService : IHandle<CreateUser>, IHandle<ChangeName>
+    public class UserHandlers : IHandle<CreateUser>, IHandle<ChangeName>
     {
         private readonly IUserView _userView;
         private readonly IDomainRepository _domainRepository;
 
-        public UserService(IUserView userView, IDomainRepository domainRepository)
+        public UserHandlers(IUserView userView, IDomainRepository domainRepository)
         {
             _userView = userView;
             _domainRepository = domainRepository;
@@ -17,7 +18,7 @@ namespace HelloEventStore.Domain.Services
 
         public IAggregate Handle(CreateUser command)
         {
-            if (_userView.UserExist(command.UserName))
+            if (_userView.Exist(command.UserName))
             {
                 throw new UserNameTakenException("User with user name " + command.UserName + " already exists");   
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using EventStore.ClientAPI;
+using HelloEventStore.Infrastructure.Exceptions;
 using Newtonsoft.Json;
 
 namespace HelloEventStore
@@ -34,8 +35,12 @@ namespace HelloEventStore
         public override TResult GetById<TResult>(Guid id)
         {
             var streamName = AggregateToStreamName(typeof(TResult), id);
-            var events = _connection.ReadStreamEventsForward(streamName, 0, int.MaxValue, false);
-            var deserializedEvents = events.Events.Select(e =>
+            var eventsSlice = _connection.ReadStreamEventsForward(streamName, 0, int.MaxValue, false);
+            if (eventsSlice.Status == SliceReadStatus.StreamNotFound)
+            {
+                throw new AggregateNotFoundException("Could not found aggregate of type " + typeof(TResult) + " and id " + id);
+            }
+            var deserializedEvents = eventsSlice.Events.Select(e =>
             {
                 var metadata = DeserializeObject<Dictionary<string, string>>(e.OriginalEvent.Metadata);
                 var eventData = DeserializeObject(e.OriginalEvent.Data, metadata[EventClrTypeHeader]);

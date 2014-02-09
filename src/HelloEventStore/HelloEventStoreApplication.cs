@@ -21,9 +21,15 @@ namespace HelloEventStore
         private CommandDispatcher CreateCommandDispatcher(IDomainRepository domainRepository, IUserView userView)
         {
             var commandDispatcher = new CommandDispatcher(domainRepository, _preExecutionPipe);
-            var userService = new UserService(userView, domainRepository);
-            commandDispatcher.RegisterHandler<CreateUser>(userService.Handle);
-            commandDispatcher.RegisterHandler<ChangeName>(userService.Handle);
+
+            var userHandlers = new UserHandlers(userView, domainRepository);
+            commandDispatcher.RegisterHandler<CreateUser>(userHandlers.Handle);
+            commandDispatcher.RegisterHandler<ChangeName>(userHandlers.Handle);
+
+            var productHandlers = new ProductHandlers(domainRepository);
+            commandDispatcher.RegisterHandler<AddProductToInventory>(productHandlers.Handle);
+            commandDispatcher.RegisterHandler<UpdateProductInventory>(productHandlers.Handle);
+            
             return commandDispatcher;
         }
 

@@ -21,6 +21,7 @@ namespace HelloEventStore
             var commandReader = new CommandReader();
 
             var connection = CreateConnection();
+            CreateProductView(connection);
             var userView = CreateUserView(connection);
             var domainRepository = new EventStoreDomainRepository(connection);
             var application = new HelloEventStoreApplication(userView, domainRepository, Logger);
@@ -42,6 +43,14 @@ namespace HelloEventStore
                     {
                         commandReader.PrintOptions();
                     }
+                    else if (command is ListUsers)
+                    {
+                        PrintUsers();
+                    }
+                    else if (command is ListProducts)
+                    {
+                        PrintProducts();
+                    }
                     else
                     {
                         application.ExecuteCommand(command);
@@ -55,6 +64,49 @@ namespace HelloEventStore
                     Console.ForegroundColor = currentColor;
                 }
             }
+        }
+
+        private static void PrintUsers()
+        {
+            PrintAggregates(UserView.Instance.GetAll());
+        }
+
+        private static void PrintProducts()
+        {
+            PrintAggregates(ProductView.Instance.GetAll());
+        }
+
+        private static void PrintAggregates(Dictionary<string, Guid> aggregates)
+        {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            foreach (var entry in aggregates)
+            {
+                Console.WriteLine("Name: {0}, Id: {1}", entry.Key, entry.Value);
+            }
+            Console.ForegroundColor = oldColor;
+        }
+
+        private static void CreateProductView(IEventStoreConnection connection)
+        {
+            var productView = ProductView.Instance;
+            Position position = Position.Start;
+            var allEvents = connection.ReadAllEventsForward(position, int.MaxValue, false);
+            Action<ResolvedEvent> updateView = re =>
+            {
+                if (re.OriginalEvent.EventType == typeof(ProductAddedToInventory).Name)
+                {
+                    var jsonString = Encoding.UTF8.GetString(re.OriginalEvent.Data);
+                    var @event = JsonConvert.DeserializeObject<ProductAddedToInventory>(jsonString);
+
+                    productView.Insert(@event.Id, @event.ProductName);
+                }
+            };
+            foreach (var resolvedEvent in allEvents.Events)
+            {
+                updateView(resolvedEvent);
+            }
+            connection.SubscribeToAll(false, (ess, re) => updateView(re));
         }
 
         private static void Logger(ICommand command)
@@ -81,7 +133,7 @@ namespace HelloEventStore
                     var jsonString = Encoding.UTF8.GetString(re.OriginalEvent.Data);
                     var @event = JsonConvert.DeserializeObject<UserCreated>(jsonString);
 
-                    userView.InsertUser(@event.Id, @event.UserName);
+                    userView.Insert(@event.Id, @event.UserName);
                 }
             };
             foreach (var resolvedEvent in allEvents.Events)

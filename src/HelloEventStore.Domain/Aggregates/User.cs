@@ -3,7 +3,7 @@ using HelloEventStore.Domain.Events;
 using HelloEventStore.Domain.Services;
 using HelloEventStore.Infrastructure;
 
-namespace HelloEventStore.Domain
+namespace HelloEventStore.Domain.Aggregates
 {
     public class User : AggregateBase
     {

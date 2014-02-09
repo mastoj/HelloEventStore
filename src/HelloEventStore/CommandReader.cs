@@ -12,17 +12,36 @@ namespace HelloEventStore
             <string, Tuple<string, Func<string[], object>>>()
         {
             {"ca", DescAction("po - [user name] [product id]", CreatePlaceOrderCommand)},
-            {"cu", DescAction("cu [user name] [name] - create user",CreateCreateUserCommand)},
-            {"cn", DescAction("cn [user name] [new name] - change user name",CreateChangeUserNameCommand)},
+            {"cu", DescAction("cu [user name] [name] - create user", CreateCreateUserCommand)},
+            {"cn", DescAction("cn [user name] [new name] - change user name", CreateChangeUserNameCommand)},
+            {"cp", DescAction("cp [product name] [quantity] - create product", CreateAddProductCommand)},
+            {"ui", DescAction("ui [product name] [quantity] - update product inventory", CreateUpdateProductCommand)},
+            {"lu", DescAction("lu - list users", _ => new ListUsers())},
+            {"lp", DescAction("lp - list products", _ => new ListProducts())},
             {"q", DescAction("q - quit", _ => new Quit())},
             {"?", DescAction("? - printOptions", _ => new PrintOptions())},
         };
+
+        private static object CreateUpdateProductCommand(string[] arg)
+        {
+            var productName = arg[0];
+            var productId = ProductView.Instance.GetId(productName);
+            var quantityChange = int.Parse(arg[1]);
+            return new UpdateProductInventory(productId, quantityChange);
+        }
+
+        private static object CreateAddProductCommand(string[] arg)
+        {
+            var productName = arg[0];
+            var quantity = int.Parse(arg[1]);
+            return new AddProductToInventory(productName, quantity);
+        }
 
         private static object CreateChangeUserNameCommand(string[] arg)
         {
             var userName = arg[0];
             var newName = arg[1];
-            var userId = UserView.Instance.GetUserId(userName);
+            var userId = UserView.Instance.GetId(userName);
             return new ChangeName(userId, newName);
         }
 
