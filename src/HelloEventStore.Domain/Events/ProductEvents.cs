@@ -62,6 +62,12 @@ namespace HelloEventStore.Domain.Events
             InitialQuantity = initialQuantity;
         }
 
+        public override string ToString()
+        {
+            var readableString = string.Format("Id: {0}, Quantity change: {1}, Initial quantity: {2}", Id, QuantityChange, InitialQuantity);
+            return readableString;
+        }
+
         protected bool Equals(ProductQuantityChanged other)
         {
             return InitialQuantity == other.InitialQuantity && QuantityChange == other.QuantityChange && Id.Equals(other.Id);

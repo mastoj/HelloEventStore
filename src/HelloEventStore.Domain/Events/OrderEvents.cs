@@ -74,10 +74,19 @@ namespace HelloEventStore.Domain.Events
     public class OrderCancelled
     {
         public Guid Id { get; private set; }
+        public Guid ProductId { get; set; }
+        public int Quantity { get; set; }
+
+        public OrderCancelled(Guid id, Guid productId, int quantity)
+        {
+            Id = id;
+            ProductId = productId;
+            Quantity = quantity;
+        }
 
         protected bool Equals(OrderCancelled other)
         {
-            return Id.Equals(other.Id);
+            return Id.Equals(other.Id) && ProductId.Equals(other.ProductId) && Quantity == other.Quantity;
         }
 
         public override bool Equals(object obj)
@@ -90,12 +99,13 @@ namespace HelloEventStore.Domain.Events
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
-        }
-
-        public OrderCancelled(Guid id)
-        {
-            Id = id;
+            unchecked
+            {
+                int hashCode = Id.GetHashCode();
+                hashCode = (hashCode*397) ^ ProductId.GetHashCode();
+                hashCode = (hashCode*397) ^ Quantity;
+                return hashCode;
+            }
         }
     }
 }

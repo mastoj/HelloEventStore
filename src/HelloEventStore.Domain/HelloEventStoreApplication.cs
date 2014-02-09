@@ -25,12 +25,23 @@ namespace HelloEventStore.Domain
         private IEnumerable<Action<object>> CreatePostExecutionPipe(IEnumerable<Action<object>> postExecutionPipe)
         {
             yield return OrderPlacedHandler;
+            yield return OrderCancelledHandler;
             if (postExecutionPipe != null)
             {
                 foreach (var action in postExecutionPipe)
                 {
                     yield return action;
                 }
+            }
+        }
+
+        private void OrderCancelledHandler(object obj)
+        {
+            var type = obj.GetType();
+            if (type == typeof(OrderCancelled))
+            {
+                var @event = obj as OrderCancelled;
+                ExecuteCommand(new UpdateProductInventory(@event.ProductId, @event.Quantity));
             }
         }
 
@@ -58,6 +69,9 @@ namespace HelloEventStore.Domain
 
             var orderHandlers = new OrderHandlers(domainRepository);
             commandDispatcher.RegisterHandler<PlaceOrder>(orderHandlers.Handle);
+            commandDispatcher.RegisterHandler<DeliverOrder>(orderHandlers.Handle);
+            commandDispatcher.RegisterHandler<CancelOrder>(orderHandlers.Handle);
+
             return commandDispatcher;
         }
 
