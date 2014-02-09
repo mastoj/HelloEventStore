@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE4DC50A-A17F-4231-AAF2-59F473ADD513}</ProjectGuid>
+    <ProjectGuid>{FA43A99A-1813-4532-A00A-A570F92CF971}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HelloEventStore.Infrastructure</RootNamespace>
-    <AssemblyName>HelloEventStore.Infrastructure</AssemblyName>
+    <RootNamespace>HelloEventStore.Tests</RootNamespace>
+    <AssemblyName>HelloEventStore.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,12 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EventStore.ClientAPI">
-      <HintPath>..\packages\EventStore.Client.2.0.2\lib\net40\EventStore.ClientAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,20 +44,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AggregateBase.cs" />
-    <Compile Include="Exceptions\AggregateNotFoundException.cs" />
-    <Compile Include="CommandDispatcher.cs" />
-    <Compile Include="DomainRepositoryBase.cs" />
-    <Compile Include="EventStoreDomainRepository.cs" />
-    <Compile Include="IAggregate.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="IDomainRepository.cs" />
-    <Compile Include="IHandle.cs" />
-    <Compile Include="InMemoryDomainRespository.cs" />
+    <Compile Include="TestBase.cs" />
+    <Compile Include="UserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelloEventStore.Domain\HelloEventStore.Domain.csproj">
+      <Project>{B870F645-2C8A-44B4-8B03-13A29751E872}</Project>
+      <Name>HelloEventStore.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HelloEventStore.Infrastructure\HelloEventStore.Infrastructure.csproj">
+      <Project>{CE4DC50A-A17F-4231-AAF2-59F473ADD513}</Project>
+      <Name>HelloEventStore.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HelloEventStore\HelloEventStore.csproj">
+      <Project>{41C488BA-E72B-4DBF-8139-B1CFD13A4E9A}</Project>
+      <Name>HelloEventStore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

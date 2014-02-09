@@ -1,5 +1,6 @@
 ﻿using System;
 using HelloEventStore.Domain.Events;
+using HelloEventStore.Domain.Services;
 using HelloEventStore.Infrastructure;
 
 namespace HelloEventStore.Domain
@@ -34,7 +35,7 @@ namespace HelloEventStore.Domain
 
         public static User CreateUser(string userName, string name)
         {
-            return new User(Guid.NewGuid(), userName, name);
+            return new User(IdGenerator.GetId(), userName, name);
         }
 
         public void ChangeName(string newName)

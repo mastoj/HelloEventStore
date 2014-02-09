@@ -1,5 +1,5 @@
-﻿using System;
-using HelloEventStore.Domain.Commands;
+﻿using HelloEventStore.Domain.Commands;
+using HelloEventStore.Domain.Exceptions;
 using HelloEventStore.Infrastructure;
 
 namespace HelloEventStore.Domain.Services
@@ -19,7 +19,7 @@ namespace HelloEventStore.Domain.Services
         {
             if (_userView.UserExist(command.UserName))
             {
-                throw new ApplicationException("User with user name " + command.UserName + " already exists");   
+                throw new UserNameTakenException("User with user name " + command.UserName + " already exists");   
             }
             var user = User.CreateUser(command.UserName, command.Name);
             return user;

@@ -12,8 +12,7 @@ namespace HelloEventStore
 
         protected int CalculateExpectedVersion(IAggregate aggregate, List<object> events)
         {
-            var expectedVersion = aggregate.Version - events.Count - 1;
-            expectedVersion = expectedVersion == -1 ? ExpectedVersion.NoStream : expectedVersion;
+            var expectedVersion = aggregate.Version - events.Count;
             return expectedVersion;
         }
 

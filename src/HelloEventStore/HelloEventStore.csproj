@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CommandReader.cs" />
     <Compile Include="Commands\PrintOptions.cs" />
+    <Compile Include="HelloEventStoreApplication.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\Quit.cs" />

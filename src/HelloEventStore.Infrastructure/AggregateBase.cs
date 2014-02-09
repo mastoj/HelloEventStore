@@ -5,11 +5,23 @@ namespace HelloEventStore.Infrastructure
 {
     public class AggregateBase : IAggregate
     {
-        public int Version { get; protected set; }
+        public int Version
+        {
+            get
+            {
+                return _version;
+            }
+            protected set
+            {
+                _version = value;
+            }
+        }
+
         public Guid Id { get; protected set; }
 
         private List<object> _uncommitedEvents = new List<object>();
         private Dictionary<Type, Action<object>> _routes = new Dictionary<Type, Action<object>>();
+        private int _version = -1;
 
         public void RaiseEvent(object @event)
         {
