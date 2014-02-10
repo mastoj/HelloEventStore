@@ -17,6 +17,7 @@ namespace HelloEventStore
             {"cp", DescAction("cp [product name] [quantity] - create product", CreateAddProductCommand)},
             {"ui", DescAction("ui [product name] [quantity] - update product inventory", CreateUpdateProductCommand)},
             {"po", DescAction("po [user name] [product name] [quantity] - place order", CreatePlaceOrderCommand)},
+            {"co", DescAction("co [order id] - cancel order", args => new CancelOrder(Guid.Parse(args[0])))},
             {"lu", DescAction("lu - list users", _ => new ListUsers())},
             {"lp", DescAction("lp - list products", _ => new ListProducts())},
             {"q", DescAction("q - quit", _ => new Quit())},
