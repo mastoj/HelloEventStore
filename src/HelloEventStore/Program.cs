@@ -19,6 +19,7 @@ namespace HelloEventStore
 
         static void Main(string[] args)
         {
+            ConsoleExtensions.SetFont("Consolas", 11, 24);
             var commandReader = new CommandReader();
 
             var connection = CreateConnection();
