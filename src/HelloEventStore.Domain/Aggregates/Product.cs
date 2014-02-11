@@ -17,7 +17,12 @@ namespace HelloEventStore.Domain.Aggregates
             RegisterTransition<ProductQuantityIncreased>(Apply);
         }
 
-        private void Apply(ProductQuantityChanged @event)
+        private void Apply(ProductQuantityDecreased @event)
+        {
+            _quantity = _quantity + @event.QuantityChange;
+        }
+
+        private void Apply(ProductQuantityIncreased @event)
         {
             _quantity = _quantity + @event.QuantityChange;
         }

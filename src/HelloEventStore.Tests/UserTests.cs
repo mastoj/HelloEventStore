@@ -3,7 +3,6 @@ using HelloEventStore.Domain.Commands;
 using HelloEventStore.Domain.Events;
 using HelloEventStore.Domain.Exceptions;
 using HelloEventStore.Domain.Services;
-using HelloEventStore.Infrastructure;
 using HelloEventStore.Infrastructure.Exceptions;
 using NUnit.Framework;
 

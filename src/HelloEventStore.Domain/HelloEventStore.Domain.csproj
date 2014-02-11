@@ -40,12 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregates\Order.cs" />
-    <Compile Include="Commands\OrderCommands.cs" />
-    <Compile Include="Commands\ProductCommands.cs" />
-    <Compile Include="Commands\UserCommands.cs" />
-    <Compile Include="Events\OrderEvents.cs" />
-    <Compile Include="Events\ProductEvents.cs" />
-    <Compile Include="Events\UserEvents.cs" />
     <Compile Include="Aggregates\Product.cs" />
     <Compile Include="Exceptions\OrderStateException.cs" />
     <Compile Include="Handlers\OrderHandlers.cs" />
@@ -59,6 +53,10 @@
     <Compile Include="Aggregates\User.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HelloEventStore.Domain.Contract\HelloEventStore.Domain.Contract.fsproj">
+      <Project>{92b81237-69d5-4a55-a9c1-522cdd6ab516}</Project>
+      <Name>HelloEventStore.Domain.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HelloEventStore.Infrastructure\HelloEventStore.Infrastructure.csproj">
       <Project>{CE4DC50A-A17F-4231-AAF2-59F473ADD513}</Project>
       <Name>HelloEventStore.Infrastructure</Name>

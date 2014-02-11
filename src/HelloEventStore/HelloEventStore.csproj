@@ -66,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HelloEventStore.Domain.Contract\HelloEventStore.Domain.Contract.fsproj">
+      <Project>{92b81237-69d5-4a55-a9c1-522cdd6ab516}</Project>
+      <Name>HelloEventStore.Domain.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HelloEventStore.Domain\HelloEventStore.Domain.csproj">
       <Project>{B870F645-2C8A-44B4-8B03-13A29751E872}</Project>
       <Name>HelloEventStore.Domain</Name>
