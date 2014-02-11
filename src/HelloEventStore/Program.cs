@@ -19,12 +19,7 @@ namespace HelloEventStore
 
         static void Main(string[] args)
         {
-            //var x = new Domain.Contract.Commands.PlaceOrder(Guid.Empty, Guid.Empty, 10);
-            //var y = new Domain.Contract.Commands.PlaceOrder(Guid.Empty, Guid.Empty, 10);
-            //Console.WriteLine(x.Equals(y));
-            //Console.WriteLine(c is ICommand);
-            //Console.WriteLine("{0}", c);
-
+            ConsoleExtensions.SetFont("Consolas", 11, 24);
             var commandReader = new CommandReader();
 
             var connection = CreateConnection();
