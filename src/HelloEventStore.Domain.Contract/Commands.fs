@@ -29,3 +29,8 @@ type ChangeName =
 type CreateUser = 
     {UserName: string; Name: string}
     with interface ICommand
+
+
+type ApproveOrder = 
+    { Id: Guid }
+    with interface ICommand

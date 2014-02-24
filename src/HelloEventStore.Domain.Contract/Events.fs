@@ -28,3 +28,9 @@ type NameChanged =
 
 type UserCreated = 
     {Id: Guid; UserName: string; Name: string}
+
+type NeedsApproval = 
+    { Id: Guid }
+
+type OrderApproved = 
+    { Id: Guid }

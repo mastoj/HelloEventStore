@@ -22,6 +22,10 @@ namespace HelloEventStore.Domain.Aggregates
             : this()
         {
             RaiseEvent(new OrderCreated(id, userId, productId, quantity));
+            if (quantity > 100)
+            {
+                RaiseEvent(new NeedsApproval(id));                
+            }
         }
 
         private void Apply(OrderCreated @event)
