@@ -100,8 +100,7 @@ namespace HelloEventStore.Tests
 
             When(new PlaceOrder(userId, productId, quantity));
 
-            Then(new OrderCreated(orderId, userId, productId, quantity),
-                new NeedsApproval(orderId));
+            Then(new NeedsApproval(orderId, userId, productId, quantity));
         }
 
         [Test]
@@ -109,15 +108,17 @@ namespace HelloEventStore.Tests
         {
             var orderId = Guid.NewGuid();
             var productId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
             var quantity = 101;
             var initialQuantity = 1000;
 
-            Given(orderId, new OrderCreated(orderId, Guid.NewGuid(), productId, quantity));
+            Given(orderId, new NeedsApproval(orderId, userId, productId, quantity));
             Given(productId, new ProductAddedToInventory(productId, "ball", initialQuantity));
 
             When(new ApproveOrder(orderId));
 
-            Then(new OrderApproved(orderId),
+            Then(new OrderCreated(orderId, Guid.Empty, productId, quantity),
+                new OrderApproved(orderId),
                 new ProductQuantityDecreased(productId, -quantity, initialQuantity));
         }
     }
