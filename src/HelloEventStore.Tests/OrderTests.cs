@@ -85,5 +85,40 @@ namespace HelloEventStore.Tests
             Given(orderId, new OrderCreated(orderId, Guid.Empty, productId, orderQuantity), new OrderDelivered(orderId));
             WhenThrows<OrderStateException>(new CancelOrder(orderId));
         }
+
+        [Test]
+        public void PlaceOrder_NeedsApprovalIfOver100()
+        {
+            var userId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var orderId = Guid.NewGuid();
+            IdGenerator.GuidGenerator = () => orderId;
+            var quantity = 101;
+
+            Given(userId, new UserCreated(userId, "john", "doe"));
+            Given(productId, new ProductAddedToInventory(productId, "ball", 1000));
+
+            When(new PlaceOrder(userId, productId, quantity));
+
+            Then(new OrderCreated(orderId, userId, productId, quantity),
+                new NeedsApproval(orderId));
+        }
+
+        [Test]
+        public void ApproveOrder_()
+        {
+            var orderId = Guid.NewGuid();
+            var productId = Guid.NewGuid();
+            var quantity = 101;
+            var initialQuantity = 1000;
+
+            Given(orderId, new OrderCreated(orderId, Guid.NewGuid(), productId, quantity));
+            Given(productId, new ProductAddedToInventory(productId, "ball", initialQuantity));
+
+            When(new ApproveOrder(orderId));
+
+            Then(new OrderApproved(orderId),
+                new ProductQuantityDecreased(productId, -quantity, initialQuantity));
+        }
     }
 }
