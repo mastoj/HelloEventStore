@@ -30,7 +30,7 @@ type UserCreated =
     {Id: Guid; UserName: string; Name: string}
 
 type NeedsApproval = 
-    { Id: Guid }
+    {Id: Guid; UserId: Guid; ProductId: Guid; Quantity: int}
 
 type OrderApproved = 
     { Id: Guid }
