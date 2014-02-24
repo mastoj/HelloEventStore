@@ -4,7 +4,7 @@ using HelloEventStore.Infrastructure;
 
 namespace HelloEventStore.Domain.Handlers
 {
-    public class OrderHandlers : IHandle<PlaceOrder>, IHandle<DeliverOrder>, IHandle<CancelOrder>
+    public class OrderHandlers : IHandle<PlaceOrder>, IHandle<DeliverOrder>, IHandle<CancelOrder>, IHandle<ApproveOrder>
     {
         private readonly IDomainRepository _domainRepository;
 
@@ -32,6 +32,13 @@ namespace HelloEventStore.Domain.Handlers
         {
             var order = _domainRepository.GetById<Order>(command.Id);
             order.Cancel();
+            return order;
+        }
+
+        public IAggregate Handle(ApproveOrder command)
+        {
+            var order = _domainRepository.GetById<Order>(command.Id);
+            order.Approve();
             return order;
         }
     }

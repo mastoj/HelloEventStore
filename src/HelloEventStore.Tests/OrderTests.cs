@@ -117,7 +117,7 @@ namespace HelloEventStore.Tests
 
             When(new ApproveOrder(orderId));
 
-            Then(new OrderCreated(orderId, Guid.Empty, productId, quantity),
+            Then(new OrderCreated(orderId, userId, productId, quantity),
                 new OrderApproved(orderId),
                 new ProductQuantityDecreased(productId, -quantity, initialQuantity));
         }

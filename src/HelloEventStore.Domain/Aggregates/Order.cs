@@ -11,29 +11,47 @@ namespace HelloEventStore.Domain.Aggregates
         private int _quantity;
         private Guid _productId;
         private bool _delivered;
+        private bool _approved;
+        private Guid _userId;
 
         public Order()
         {
             RegisterTransition<OrderCreated>(Apply);
+            RegisterTransition<NeedsApproval>(Apply);
             RegisterTransition<OrderDelivered>(Apply);
         }
 
         private Order(Guid id, Guid userId, Guid productId, int quantity)
             : this()
         {
-            RaiseEvent(new OrderCreated(id, userId, productId, quantity));
             if (quantity > 100)
             {
-                RaiseEvent(new NeedsApproval(id, userId, productId, quantity));                
+                RaiseEvent(new NeedsApproval(id, userId, productId, quantity));
+            }
+            else
+            {
+                RaiseEvent(new OrderCreated(id, userId, productId, quantity));
             }
         }
 
         private void Apply(OrderCreated @event)
         {
-            Id = @event.Id;
-            _productId = @event.ProductId;
-            _quantity = @event.Quantity;
+            DynamicApply(@event);
+        }
+
+        private void Apply(NeedsApproval @event)
+        {
+            DynamicApply(@event, false);
+        }
+
+        private void DynamicApply(dynamic dynamicEvent, bool approved = true)
+        {
+            Id = dynamicEvent.Id;
+            _userId = dynamicEvent.UserId;
+            _productId = dynamicEvent.ProductId;
+            _quantity = dynamicEvent.Quantity;
             _delivered = false;
+            _approved = approved;
         }
 
         private void Apply(OrderDelivered obj)
@@ -58,6 +76,12 @@ namespace HelloEventStore.Domain.Aggregates
                 throw new OrderStateException("Order " + Id + " is already delivered and can't be cancelled");
             }
             RaiseEvent(new OrderCancelled(Id, _productId, _quantity));
+        }
+
+        public void Approve()
+        {
+            RaiseEvent(new OrderCreated(Id, _userId, _productId, _quantity));
+            RaiseEvent(new OrderApproved(Id));
         }
     }
 }

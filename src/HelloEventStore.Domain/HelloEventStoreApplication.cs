@@ -41,6 +41,7 @@ namespace HelloEventStore.Domain
             commandDispatcher.RegisterHandler<PlaceOrder>(orderHandlers.Handle);
             commandDispatcher.RegisterHandler<DeliverOrder>(orderHandlers.Handle);
             commandDispatcher.RegisterHandler<CancelOrder>(orderHandlers.Handle);
+            commandDispatcher.RegisterHandler<ApproveOrder>(orderHandlers.Handle);
 
             return commandDispatcher;
         }
