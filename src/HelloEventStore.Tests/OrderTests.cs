@@ -104,7 +104,7 @@ namespace HelloEventStore.Tests
         }
 
         [Test]
-        public void ApproveOrder_()
+        public void ApproveOrder_CreatesOrderApprovesItAndDecreasesTheStock()
         {
             var orderId = Guid.NewGuid();
             var productId = Guid.NewGuid();
