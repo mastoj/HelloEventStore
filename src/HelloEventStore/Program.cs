@@ -114,10 +114,10 @@ namespace HelloEventStore
         private static void Logger(object obj)
         {
             var oldColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            var commandType = obj.GetType();
-            Console.WriteLine(commandType.Name);
-            var propertyInfos = commandType.GetProperties();
+            Console.ForegroundColor = obj is ICommand ? ConsoleColor.Cyan : ConsoleColor.Yellow;
+            var objectType = obj.GetType();
+            Console.WriteLine(objectType.Name);
+            var propertyInfos = objectType.GetProperties();
             foreach (var propertyInfo in propertyInfos)
             {
                 Console.WriteLine("{0}: {1}", propertyInfo.Name, propertyInfo.GetValue(obj, null));
