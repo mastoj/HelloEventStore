@@ -19,11 +19,11 @@ namespace HelloEventStore.Infrastructure
 
         public Guid Id { get; protected set; }
 
-        private List<object> _uncommitedEvents = new List<object>();
-        private Dictionary<Type, Action<object>> _routes = new Dictionary<Type, Action<object>>();
+        private List<IEvent> _uncommitedEvents = new List<IEvent>();
+        private Dictionary<Type, Action<IEvent>> _routes = new Dictionary<Type, Action<IEvent>>();
         private int _version = -1;
 
-        public void RaiseEvent(object @event)
+        public void RaiseEvent(IEvent @event)
         {
             ApplyEvent(@event);
             _uncommitedEvents.Add(@event);
@@ -34,7 +34,7 @@ namespace HelloEventStore.Infrastructure
             _routes.Add(typeof (T), o => transition(o as T));
         }
 
-        public void ApplyEvent(object @event)
+        public void ApplyEvent(IEvent @event)
         {
             var eventType = @event.GetType();
             if (_routes.ContainsKey(eventType))
@@ -44,7 +44,7 @@ namespace HelloEventStore.Infrastructure
             Version++;
         }
 
-        public IEnumerable<object> UncommitedEvents()
+        public IEnumerable<IEvent> UncommitedEvents()
         {
             return _uncommitedEvents;
         }

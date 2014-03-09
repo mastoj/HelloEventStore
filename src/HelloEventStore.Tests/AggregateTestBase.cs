@@ -13,7 +13,7 @@ namespace HelloEventStore.Tests
         private InMemoryDomainRespository _domainRepository;
         private HelloEventStoreApplication application_application;
         private IUserView _userView;
-        private Dictionary<Guid, List<object>> _preConditions = new Dictionary<Guid, List<object>>();
+        private Dictionary<Guid, IEnumerable<IEvent>> _preConditions = new Dictionary<Guid, IEnumerable<IEvent>>();
 
         protected IUserView UserView
         {
@@ -39,7 +39,7 @@ namespace HelloEventStore.Tests
         public void TearDown()
         {
             IdGenerator.GuidGenerator = null;
-            _preConditions = new Dictionary<Guid, List<object>>();
+            _preConditions = new Dictionary<Guid, IEnumerable<IEvent>>();
         }
 
         protected void When(ICommand command)
@@ -65,10 +65,10 @@ namespace HelloEventStore.Tests
             Assert.Throws<TException>(() => When(command));
         }
 
-        protected void Given(Guid id, params object[] existingEvents)
+        protected void Given(Guid id, params IEvent[] existingEvents)
         {
-            _preConditions.Add(id, new List<object>());
-            _preConditions[id].AddRange(existingEvents);
+            var eventList = new List<IEvent>(existingEvents);
+            _preConditions.Add(id, eventList);
         }
     }
 }

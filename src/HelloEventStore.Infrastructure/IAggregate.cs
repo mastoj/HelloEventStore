@@ -5,10 +5,10 @@ namespace HelloEventStore.Infrastructure
 {
     public interface IAggregate
     {
-        IEnumerable<object> UncommitedEvents();
+        IEnumerable<IEvent> UncommitedEvents();
         void ClearUncommitedEvents();
         int Version { get; }
         Guid Id { get; }
-        void ApplyEvent(object @event);
+        void ApplyEvent(IEvent @event);
     }
 }

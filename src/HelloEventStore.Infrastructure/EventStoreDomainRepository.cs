@@ -22,7 +22,7 @@ namespace HelloEventStore.Infrastructure
             return string.Format("{0}-{1}", type.Name, id);
         }
 
-        public override IEnumerable<object> Save<TAggregate>(TAggregate aggregate)
+        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
         {
             var events = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, events);
@@ -44,7 +44,7 @@ namespace HelloEventStore.Infrastructure
             {
                 var metadata = DeserializeObject<Dictionary<string, string>>(e.OriginalEvent.Metadata);
                 var eventData = DeserializeObject(e.OriginalEvent.Data, metadata[EventClrTypeHeader]);
-                return eventData;
+                return eventData as IEvent;
             });
             return BuildAggregate<TResult>(deserializedEvents);
         }

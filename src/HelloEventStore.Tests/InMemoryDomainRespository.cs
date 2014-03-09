@@ -9,10 +9,10 @@ namespace HelloEventStore.Tests
 {
     public class InMemoryDomainRespository : DomainRepositoryBase
     {
-        public Dictionary<Guid, List<object>> _eventStore = new Dictionary<Guid, List<object>>();
-        private List<object> _latestEvents = new List<object>();
+        public Dictionary<Guid, List<IEvent>> _eventStore = new Dictionary<Guid, List<IEvent>>();
+        private List<IEvent> _latestEvents = new List<IEvent>();
 
-        public override IEnumerable<object> Save<TAggregate>(TAggregate aggregate)
+        public override IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate)
         {
             var eventsToSave = aggregate.UncommitedEvents().ToList();
             var expectedVersion = CalculateExpectedVersion(aggregate, eventsToSave);
@@ -36,7 +36,7 @@ namespace HelloEventStore.Tests
             return eventsToSave;
         }
 
-        public IEnumerable<object> GetLatestEvents()
+        public IEnumerable<IEvent> GetLatestEvents()
         {
             return _latestEvents;
         }
@@ -51,11 +51,11 @@ namespace HelloEventStore.Tests
             throw new AggregateNotFoundException("Could not found aggregate of type " + typeof (TResult) + " and id " + id);
         }
 
-        public void AddEvents(Dictionary<Guid, List<object>> eventsForAggregates)
+        public void AddEvents(Dictionary<Guid, IEnumerable<IEvent>> eventsForAggregates)
         {
             foreach (var eventsForAggregate in eventsForAggregates)
             {
-                _eventStore.Add(eventsForAggregate.Key, eventsForAggregate.Value);
+                _eventStore.Add(eventsForAggregate.Key, eventsForAggregate.Value.ToList());
             }
         }
     }

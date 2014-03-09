@@ -5,16 +5,16 @@ namespace HelloEventStore.Infrastructure
 {
     public abstract class DomainRepositoryBase : IDomainRepository
     {
-        public abstract IEnumerable<object> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
+        public abstract IEnumerable<IEvent> Save<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
         public abstract TResult GetById<TResult>(Guid id) where TResult : IAggregate, new();
 
-        protected int CalculateExpectedVersion(IAggregate aggregate, List<object> events)
+        protected int CalculateExpectedVersion(IAggregate aggregate, List<IEvent> events)
         {
             var expectedVersion = aggregate.Version - events.Count;
             return expectedVersion;
         }
 
-        protected TResult BuildAggregate<TResult>(IEnumerable<object> events) where TResult : IAggregate, new()
+        protected TResult BuildAggregate<TResult>(IEnumerable<IEvent> events) where TResult : IAggregate, new()
         {
             var result = new TResult();
             foreach (var @event in events)
