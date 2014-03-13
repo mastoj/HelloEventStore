@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HelloEventStore.Domain.Commands;
+﻿using System.Collections.Generic;
 using HelloEventStore.Infrastructure;
 using HelloEventStore.Web.Models;
 using Simple.Web;

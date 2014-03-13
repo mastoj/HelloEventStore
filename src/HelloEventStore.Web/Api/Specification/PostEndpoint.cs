@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using HelloEventStore.Domain;
 using HelloEventStore.Domain.Services;
 using HelloEventStore.Tests;
-using HelloEventStore.Web.Api.Commands;
 using HelloEventStore.Web.Models;
 using Simple.Web;
 using Simple.Web.Behaviors;
@@ -30,12 +28,40 @@ namespace HelloEventStore.Web.Api.Test
             var app = new HelloEventStoreApplication(userView, domainRepository);
             app.ExecuteCommand(command);
             var latestEvents = domainRepository.GetLatestEvents();
-            Output = new SpecificationResult()
+            Output = CreateResult(postCondition, latestEvents);
+            return Status.OK;
+        }
+
+        private SpecificationResult CreateResult(IEnumerable<IEvent> postCondition, IEnumerable<IEvent> latestEvents)
+        {
+            var postConditionList = postCondition.ToList();
+            var latestEventsList = latestEvents.ToList();
+            var missingEvents = postConditionList.Where(y =>
+            {
+                if (latestEventsList.Contains(y))
+                {
+                    latestEventsList.RemoveAt(latestEventsList.IndexOf(latestEventsList.First(x => x.Equals(y))));
+                    return false;
+                }
+                return true;
+            }).ToList();
+            var extraEvents = latestEvents.Where(y =>
+            {
+                if (postConditionList.Contains(y))
+                {
+                    postConditionList.RemoveAt(postConditionList.IndexOf(postConditionList.First(x => x.Equals(y))));
+                    return false;
+                }
+                return true;
+            }).ToList();
+            return new SpecificationResult()
             {
                 ExpectedEvents = postCondition,
-                ResultingEvents = latestEvents
+                ResultingEvents = latestEvents,
+                MissingEvents = missingEvents,
+                UnexpectedEvents = extraEvents,
+                Success = missingEvents.Count == 0 && extraEvents.Count == 0
             };
-            return Status.OK;
         }
 
         public Specification Input { set; private get; }
@@ -53,5 +79,8 @@ namespace HelloEventStore.Web.Api.Test
     {
         public IEnumerable<IEvent> ResultingEvents { get; set; }
         public IEnumerable<IEvent> ExpectedEvents { get; set; }
+        public IEnumerable<IEvent> MissingEvents { get; set; }
+        public IEnumerable<IEvent> UnexpectedEvents { get; set; }
+        public bool Success { get; set; }
     }
 }
