@@ -45,7 +45,7 @@ namespace HelloEventStore.Web.Models
                 QualifiedName = y.AssemblyQualifiedName,
                 Arguments = CreateArguments(y)
             });
-            return commandModels;
+            return commandModels.OrderBy(y => y.Name);
         }
 
         private static IEnumerable<Argument> CreateArguments(Type type)

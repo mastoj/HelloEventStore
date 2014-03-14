@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Events\GetEndpoint.cs" />
+    <Compile Include="Api\Index\GetEndpoint.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Models\Argument.cs" />
     <Compile Include="Api\Commands\GetEndpoint.cs" />

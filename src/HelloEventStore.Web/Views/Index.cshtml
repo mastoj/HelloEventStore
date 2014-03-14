@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Starter Template for Bootstrap</title>
+    <title>Hello event store</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/app/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
@@ -11,14 +11,92 @@
     <link href="/app/css/site.css" rel="stylesheet">
 </head>
 
-<body>
-    Hello world!
+<body ng-app="app">
+    <div class="container" ng-view>
+    </div>
+    
+    <script type="text/ng-template" id="directives/objectModelInput/string.html"></script>
 
+    <script type="text/ng-template" id="directives/objectModelInput.html">
+        <div>
+            {{objectModel.name | splitCamel}}
+            <ul>
+                <li ng-repeat="arg in objectModel.arguments">
+                    <div>
+                        <label>{{arg.name | splitCamel}}</label>
+                    </div>
+                    <div>
+                        <input type="text" ng-model="arg.value" />
+                    </div>
+                </li>
+            </ul>
+            <button ng-show="deletable" ng-click="deleteItem()">Delete</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="index.html">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>Commands</h2>
+                <div class="row" ng-repeat="item in commands">
+                    <div class="col-lg-12">
+                        {{item.name | splitCamel}}
+                        <button ng-click="setAction(item)">Set action</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2>Events</h2>
+                <div class="row" ng-repeat="item in events">
+                    <div class="col-lg-12">
+                        {{item.name | splitCamel}}
+                        <button ng-click="addPreCondition(item)">Add pre condition</button>
+                        <button ng-click="addPostCondition(item)">Add post condition</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Specification</h2>
+            <button ng-click="runSpecification()">Run specification</button>
+            <div class="col-lg-4">
+                <h3>Pre condition</h3>
+                <ul>
+                    <li ng-repeat="item in preConditionList">
+                        <label>Id</label>
+                        <input type="text" ng-model="item.id" />
+                        <object-model-input object-model="item.objectModel" deletable="true" on-delete="deletePreCondition(objectModel)"></object-model-input>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h3>Action</h3>
+                @*<span ng-show="specification.action" ng-bind="specification.action.name | splitCamel"></span>*@
+                <div ng-switch="hasAction()">
+                    <div ng-switch-when="true">
+                        <object-model-input object-model="specification.action" deletable="false"></object-model-input>
+                    </div>
+                    <div ng-switch-default>
+                        Choose command
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h3>Post condition</h3>
+                <ul>
+                    <li ng-repeat="item in specification.postCondition">
+                        <object-model-input object-model="item" deletable="true" on-delete="deletePostCondition(objectModel)"></object-model-input>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <pre>{{commands | json}}</pre>
+    </script>
     <script src="/app/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="/app/bower_components/boostrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="/app/bower_components/underscore/underscore.min.js" type="text/javascript"></script>
+    <script src="/app/bower_components/underscore/underscore.js" type="text/javascript"></script>
     <script src="/app/bower_components/angular/angular.min.js" type="text/javascript"></script>
     <script src="/app/bower_components/angular-route/angular-route.min.js" type="text/javascript"></script>
     <script src="/app/bower_components/angular-sanitize/angular-sanitize.min.js" type="text/javascript"></script>
-    <script src="/app/app.js" type="text/javascript"></script>
+    <script src="/app/js/app.js" type="text/javascript"></script>
 </body>
