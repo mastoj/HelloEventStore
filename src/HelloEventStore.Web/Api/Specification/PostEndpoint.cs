@@ -4,7 +4,6 @@ using System.Linq;
 using HelloEventStore.Domain;
 using HelloEventStore.Domain.Services;
 using HelloEventStore.Infrastructure;
-using HelloEventStore.Tests;
 using HelloEventStore.Web.Models;
 using Simple.Web;
 using Simple.Web.Behaviors;
@@ -13,7 +12,7 @@ using Simple.Web.Links;
 namespace HelloEventStore.Web.Api.Specification
 {
     [UriTemplate("/api/specification")]
-    [Root(Rel = "runspec", Title = "Execute specification", Type = "application/vnd.helloeventstore")]
+    [Root(Rel = "runspec", Title = "Execute specification")]
     public class PostEndpoint : IPost, IInput<Specification>, IOutput<SpecificationResult>
     {
         public Status Post()

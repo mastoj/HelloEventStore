@@ -20,6 +20,30 @@
         };
     });
 
+    app.directive("inputField", ["$compile", "$templateCache", function ($compile, $templateCache) {
+        var templateNameTemplate = "directives/objectModelInput/{type}.html";
+        var templateTemplateMapping = {
+            "System.String": "string",
+            "System.Int32": "integer",
+            "System.DateTime": "datetime",
+            "System.Guid": "string",
+        };
+        return {
+            restrict: "E",
+            scope: {
+                value: "=",
+                type: "="
+            },
+            replace: true,
+            link: function(scope, element) {
+                var templateName = templateNameTemplate.replace("{type}", templateTemplateMapping[scope.type]);
+                var template = $templateCache.get(templateName);
+                var el = $compile(template)(scope);
+                element.replaceWith(el);
+            }
+        };
+    }]);
+
     app.directive("objectModelInput", [function () {
         return {
             restrict: 'E',
@@ -28,6 +52,7 @@
                 deletable: '@',
                 onDelete: '&onDelete'
             },
+            replace: true,
             templateUrl: "directives/objectModelInput.html",
             link: function (scope, element) {
                 scope.deleteItem = function() {

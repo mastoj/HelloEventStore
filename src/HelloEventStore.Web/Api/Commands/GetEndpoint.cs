@@ -8,7 +8,7 @@ using Simple.Web.Links;
 namespace HelloEventStore.Web.Api.Commands
 {
     [UriTemplate("/api/commands")]
-    [Root(Rel = "commands", Title = "Command list", Type = "application/vnd.helloeventstore")]
+    [Root(Rel = "commands", Title = "Command list")]
     public class GetEndpoint : IGet, IOutput<IEnumerable<ObjectModel>> 
     {
         public Status Get()

@@ -14,8 +14,18 @@
 <body ng-app="app">
     <div class="container" ng-view>
     </div>
-    
-    <script type="text/ng-template" id="directives/objectModelInput/string.html"></script>
+
+    <script type="text/ng-template" id="directives/objectModelInput/string.html">
+        <input type="text" ng-model="value" />
+    </script>
+
+    <script type="text/ng-template" id="directives/objectModelInput/integer.html">
+        <input type="number" step="1" ng-model="value" />
+    </script>
+
+    <script type="text/ng-template" id="directives/objectModelInput/datetime.html">
+        <input type="datetime" ng-model="value" />
+    </script>
 
     <script type="text/ng-template" id="directives/objectModelInput.html">
         <div>
@@ -26,7 +36,7 @@
                         <label>{{arg.name | splitCamel}}</label>
                     </div>
                     <div>
-                        <input type="text" ng-model="arg.value" />
+                        <input-field value="arg.value" type="arg.type" /> 
                     </div>
                 </li>
             </ul>

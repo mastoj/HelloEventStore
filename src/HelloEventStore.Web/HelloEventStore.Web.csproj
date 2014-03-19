@@ -190,10 +190,6 @@
       <Project>{ce4dc50a-a17f-4231-aaf2-59f473add513}</Project>
       <Name>HelloEventStore.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HelloEventStore.Tests\HelloEventStore.Tests.csproj">
-      <Project>{fa43a99a-1813-4532-a00a-a570f92cf971}</Project>
-      <Name>HelloEventStore.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HelloEventStore\HelloEventStore.csproj">
       <Project>{41C488BA-E72B-4DBF-8139-B1CFD13A4E9A}</Project>
       <Name>HelloEventStore</Name>

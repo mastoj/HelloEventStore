@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventStore.ClientAPI.Exceptions;
-using HelloEventStore.Infrastructure;
 using HelloEventStore.Infrastructure.Exceptions;
 
-namespace HelloEventStore.Tests
+namespace HelloEventStore.Infrastructure
 {
     public class InMemoryDomainRespository : DomainRepositoryBase
     {

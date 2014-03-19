@@ -8,8 +8,7 @@ using Simple.Web.Links;
 namespace HelloEventStore.Web.Api.Events
 {
     [UriTemplate("/api/events")]
-    //[Canonical(typeof(IEnumerable<ObjectModel>), Title = "Event list", Type = "application/vnd.helloeventstore")]
-    [Root(Rel = "events", Title = "Event list", Type = "application/vnd.helloeventstore")]
+    [Root(Rel = "events", Title = "Event list")]
     public class GetEndpoint : IGet, IOutput<IEnumerable<ObjectModel>>
     {
         public Status Get()
