@@ -10,7 +10,6 @@
             when("/specification", { controller: 'SpecificationCtrl', templateUrl: "specification.html" }).
             //when("/second", { controller: "DetailsCtrl", templateUrl: "details.html" }).
             otherwise({ redirectTo: "/" });
-        $locationProvider.html5Mode(true);
     }]);
 
     app.filter('splitCamel', function() {
@@ -68,11 +67,15 @@
     }]);
     
     app.controller("SpecificationCtrl", ["$scope", "rootService", function ($scope, rootService) {
+        var steps = ["precondition", "action", "postcondition", "result"];
+        $scope.steps = steps;
+        $scope.stepIndex = 0;
         $scope.specification = {};
         $scope.specification.preCondition = {};
         $scope.preConditionList = [];
         $scope.specification.postCondition = [];
         $scope.specification.action = undefined;
+        
         var addCondition = function(objectModel, list) {
             var item = angular.copy(objectModel);
             delete item["$$hashKey"]; 
@@ -97,8 +100,8 @@
         $scope.addPostCondition = function (objectModel) {
             addCondition(objectModel, $scope.specification.postCondition);
         };
-        $scope.deletePreCondition = function (objectModel) {
-            deleteCondition(objectModel, $scope.preConditionList);
+        $scope.deletePreCondition = function (preConItem) {
+            deleteCondition(preConItem, $scope.preConditionList);
         };
         $scope.deletePostCondition = function (objectModel) {
             deleteCondition(objectModel, $scope.specification.postCondition);
@@ -122,8 +125,37 @@
         };
         $scope.runSpecification = function () {
             $scope.specification.preCondition = convertPreConditionList($scope.preConditionList);
-            rootService.executeSpecification($scope.specification);
+            rootService.executeSpecification($scope.specification).then(function() {
+                $scope.nextStep();
+            });
         };
+
+        var baseTemplateUrl = "specification/{name}.html";
+        $scope.stepTemplate = function() {
+            var templateUrl = baseTemplateUrl.replace("{name}", steps[$scope.stepIndex]);
+            return templateUrl;
+        };
+
+        $scope.previousDisabled = function () {
+            return $scope.stepIndex == 0;
+        };
+
+        $scope.nextDisabled = function () {
+            return $scope.stepIndex >= steps.length - 2;
+        };
+
+        $scope.executeDisabled = function() {
+            return $scope.stepIndex != steps.length - 2;
+        };
+
+        $scope.nextStep = function () {
+            $scope.stepIndex = $scope.stepIndex + 1;
+        };
+
+        $scope.previousStep = function () {
+            $scope.stepIndex = $scope.stepIndex - 1;
+        };
+
         var init = function () {
             rootService.getCommands().then(function (data) {
                 $scope.commands = data;
@@ -158,7 +190,7 @@
             return getDeferreds[rel].promise;
         };
         var executeSpecification = function(specification) {
-            $http({ method: "POST", url: "/api/specification", data: specification });
+            return $http({ method: "POST", url: "/api/specification", data: specification });
         };
         return {
             getIndex: getIndex,
