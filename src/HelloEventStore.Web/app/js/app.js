@@ -4,11 +4,13 @@
 
     'use strict';
     var app = angular.module('app', ['ngRoute', 'ngSanitize']);
-    app.config(['$routeProvider', function($routeProvider) {
+    app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
         $routeProvider.
             when("/", { controller: 'IndexCtrl', templateUrl: "index.html" }).
+            when("/specification", { controller: 'SpecificationCtrl', templateUrl: "specification.html" }).
             //when("/second", { controller: "DetailsCtrl", templateUrl: "details.html" }).
             otherwise({ redirectTo: "/" });
+        $locationProvider.html5Mode(true);
     }]);
 
     app.filter('splitCamel', function() {
@@ -61,8 +63,11 @@
             }
         };
     }]);
-
-    app.controller("IndexCtrl", ["$scope", "rootService", function ($scope, rootService) {
+    
+    app.controller("IndexCtrl", ["$scope", "rootService", function($scope, rootService) {
+    }]);
+    
+    app.controller("SpecificationCtrl", ["$scope", "rootService", function ($scope, rootService) {
         $scope.specification = {};
         $scope.specification.preCondition = {};
         $scope.preConditionList = [];
