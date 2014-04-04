@@ -10,7 +10,6 @@ namespace HelloEventStore.Web
     {
         public static Type[] EnforceReferencesFor =
                 {
-                    typeof (Simple.Web.Razor.RazorHtmlMediaTypeHandler),
                     typeof (Simple.Web.JsonNet.JsonMediaTypeHandler),
                     typeof(Domain.Commands.CreateUser),
                     typeof(Domain.Events.OutOfProduct)
@@ -22,7 +21,7 @@ namespace HelloEventStore.Web
             {
                 TypeNameHandling = TypeNameHandling.Objects
             };
-            var staticBuilder = Simple.Owin.Static.Statics.AddFolder("/app");
+            var staticBuilder = Simple.Owin.Static.Statics.AddFolder("/app").AddFileAlias("/Views/Index.html", "/");
 
 
             // Build the OWIN app
