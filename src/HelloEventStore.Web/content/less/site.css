@@ -1,0 +1,19 @@
+﻿@import "../css/font-awesome.css";
+.nav .item {
+  background-color: #666;
+}
+.nav .item.current {
+  background-color: #52b9e9;
+}
+.sidebar {
+  width: 230px;
+  height: 100%;
+}
+.transition-bg {
+  -webkit-transition: background-color 1000ms linear;
+  -moz-transition: background-color 1000ms linear;
+  -o-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+}
+/*# sourceMappingURL=site.css.map */

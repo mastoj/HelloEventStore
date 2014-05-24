@@ -6,7 +6,7 @@ using Simple.Web;
 
 namespace HelloEventStore.Web
 {
-	using UseAction = Action<Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task>>;
+    using UseAction = Action<Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task>>;
 
     public class OwinAppSetup
     {

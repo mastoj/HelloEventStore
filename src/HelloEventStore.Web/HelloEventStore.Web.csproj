@@ -83,6 +83,17 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\layout\sidebarCtrl.js" />
+    <Content Include="app\specification\new\newspecification.html" />
+    <Content Include="app\specification\new\newSpecificationCtrl.js" />
+    <Content Include="app\specification\specification.html" />
+    <Content Include="app\specification\specificationCtrl.js" />
+    <Content Include="content\css\font-awesome.css" />
+    <Content Include="content\css\font-awesome.min.css" />
+    <Content Include="content\fonts\fontawesome-webfont.svg" />
+    <Content Include="content\less\site.css">
+      <DependentUpon>site.less</DependentUpon>
+    </Content>
     <Content Include="packages.config" />
     <Content Include="content\bower_components\angular-route\.bower.json" />
     <Content Include="content\bower_components\angular-route\angular-route.min.js.map" />
@@ -166,6 +177,14 @@
     <Content Include="content\bower_components\underscore\LICENSE" />
     <Content Include="content\bower_components\underscore\package.json" />
     <Content Include="content\bower_components\underscore\README.md" />
+    <Content Include="content\fonts\fontawesome-webfont.eot" />
+    <Content Include="content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="content\fonts\fontawesome-webfont.woff" />
+    <Content Include="content\fonts\FontAwesome.otf" />
+    <Content Include="app\config.route.js" />
+    <Content Include="content\less\site.css.map">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -298,7 +317,7 @@
     <Content Include="content\bower_components\jquery\src\wrap.js" />
     <Content Include="content\bower_components\underscore\.gitignore" />
     <Content Include="content\bower_components\underscore\underscore.js" />
-    <Content Include="content\css\site.css" />
+    <None Include="content\less\site.less" />
     <Content Include="Views\Index.html" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -331,6 +350,7 @@
       <Name>HelloEventStore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

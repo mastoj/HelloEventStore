@@ -1,10 +1,7 @@
-﻿<div>
+﻿<div class="sidebar" ng-controller="sidebarCtrl as vm">
     <ul class="nav">
-        <li class="">
-            <a href="#">Specifications</a>
-        </li>
-        <li>
-            <a href="#">New specification</a>
+        <li ng-repeat="r in vm.routes" ng-class="{current: vm.isActive(r)}" class="item">
+            <a href="#{{r.url}}" ng-bind-html="r.config.content"></a>
         </li>
     </ul>
 </div>

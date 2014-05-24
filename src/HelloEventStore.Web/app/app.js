@@ -4,14 +4,6 @@
 
     'use strict';
     var app = angular.module('app', ['ngRoute', 'ngSanitize']);
-    app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-        $routeProvider.
-            when("/", { controller: 'IndexCtrl', templateUrl: "index.html" }).
-            when("/specification", { controller: 'SpecificationCtrl', templateUrl: "specification.html" }).
-            //when("/second", { controller: "DetailsCtrl", templateUrl: "details.html" }).
-            otherwise({ redirectTo: "/" });
-    }]);
-
     app.filter('splitCamel', function() {
         return function(input) {
             var result = input.replace(/[a-z][A-Z]/g, function(str, offset) {
